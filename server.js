@@ -22,4 +22,8 @@ app.get('/download/:filename', (req, res) => {
   res.download(filePath);
 });
 
+app.get('/', (req, res) => {
+  res.send('Hello, world!');
+});
+
 app.listen(PORT, () => console.log(`API listening on http://localhost:${PORT}`));
