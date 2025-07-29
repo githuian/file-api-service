@@ -8,6 +8,7 @@ const PORT = process.env.PORT || 3000;
 
 // Set up storage
 const upload = multer({ dest: 'uploads/' });
+const uploadDir = 'uploads';
 
 // Upload route
 app.post('/upload', upload.single('file'), (req, res) => {
@@ -24,6 +25,16 @@ app.get('/download/:filename', (req, res) => {
 
 app.get('/', (req, res) => {
   res.send('Hello, world!');
+});
+
+app.get('/files', (req, res) => {
+  fs.readdir(uploadDir, (err, files) => {
+    if (err) {
+      return res.status(500).json({ error: 'Unable to read files' });
+    }
+
+    res.json({ files });
+  });
 });
 
 app.listen(PORT, () => console.log(`API listening on http://localhost:${PORT}`));
