@@ -7,8 +7,24 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Set up storage
-const upload = multer({ dest: 'uploads/' });
 const uploadDir = 'uploads';
+
+// Configure storage with custom filename
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads'); // or any directory
+  },
+  filename: function (req, file, cb) {
+    // Example: use original name with timestamp
+    const ext = path.extname(file.originalname);
+    const name = path.basename(file.originalname, ext);
+    const uniqueName = `${name}-${Date.now()}${ext}`;
+    cb(null, uniqueName);
+  }
+});
+
+const upload = multer({ storage });
+
 
 // Upload route
 app.post('/upload', upload.single('file'), (req, res) => {
